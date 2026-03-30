@@ -75,17 +75,21 @@ print(word[-2])  # l
 
 ```python
 print('9'.isdigit())    # True
-print('²'.isdigit())    # True  ← superscript! (same as isnumeric here)
-print('½'.isdigit())    # False ← fraction (isdigit is stricter than isnumeric for fractions)
+print('²'.isdigit())    # True  ← superscript digit (also True for isnumeric)
+print('½'.isdigit())    # False ← fraction (isdigit rejects it; isnumeric would return True)
+print('²'.isnumeric())  # True  ← isnumeric is even broader than isdigit
+print('½'.isnumeric())  # True  ← isnumeric includes fractions; isdigit does not
 print('a'.isdigit())    # False
 ```
 
-For the gamertag filter, `'²'` should NOT be considered a "number" ending.
-To be perfectly strict:
+For the gamertag filter, `'²'` (superscript) and `'½'` (fraction) should NOT
+be considered "number" endings. `.isdigit()` rejects fractions but accepts superscripts.
+To be perfectly strict — only ASCII 0–9:
 ```python
-tag[-1] in "0123456789"   # Most explicit — only ASCII digits
+tag[-1] in "0123456789"   # Most explicit — rejects ALL non-ASCII numeric characters
 ```
-But `.isdigit()` is the standard idiomatic choice and matches C# behavior closely enough.
+But `.isdigit()` is the standard idiomatic choice and closely matches C#'s `char.IsDigit()`.
+If you encounter unusual Unicode input, use the `in "0123456789"` form instead.
 
 ---
 
